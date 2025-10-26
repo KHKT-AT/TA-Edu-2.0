@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartTutor - TA-Edu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/taedu_global.css">
+</head>
+<body>
+  <!-- Header -->
+  <div id="headerMount"></div>
+  <script type="module" src="js/core/firebase.js"></script>
+  <script type="module" src="js/core/boot_header.js"></script>
+
+  <!-- Khu vực nội dung chính -->
+  <main class="smarttutor">
+    <h2>🎓 SmartTutor - Trợ lý học tập AI</h2>
+    <p>Chào mừng bạn! Hãy đặt câu hỏi hoặc để SmartTutor gợi ý lộ trình học phù hợp.</p>
+
+    <div class="chat-container">
+      <div id="chat-box" class="chat-box">
+        <div class="bot-msg">Xin chào 👋! Mình là SmartTutor, bạn muốn học gì hôm nay?</div>
+      </div>
+
+      <div class="chat-input">
+        <input type="text" id="user-input" placeholder="Nhập câu hỏi hoặc yêu cầu..." />
+        <button id="send-btn">Gửi</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- URL backend: emulator khi chạy local -->
+  <script>
+    window.TA_EDU_TUTOR_BACKEND =
+      "http://127.0.0.1:5001/ta-edu-nh/asia-southeast1/smarttutor";
+  </script>
+  <script type="module" src="js/modules/smarttutor.js"></script>
+</body>
+</html>

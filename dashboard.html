@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TA-Edu • Dashboard</title>
+
+  <!-- Font & icon -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/taedu_global.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="./css/css_menu.css">
+</head>
+<body>
+  <!-- Header sẽ được boot_header.js chèn vào -->
+
+  <main class="dash container">
+    <!-- Sidebar -->
+    <aside class="dash__sidebar" id="dashSidebar" aria-label="Thanh điều hướng Dashboard">
+      <div class="user-card">
+        <img id="dashAvatar" class="user-card__avatar" src="assets/default_avatar.svg" alt="Avatar">
+        <div class="user-card__meta">
+          <div id="dashName" class="user-card__name">Người dùng</div>
+          <div id="dashRole" class="user-card__role badge">Học sinh</div>
+          <div id="dashEmail" class="user-card__email">email@example.com</div>
+        </div>
+      </div>
+
+      <nav class="dash__nav" role="tablist" aria-label="Mục chính">
+        <a href="#tab=profile"  class="nav-item" data-tab="profile"><i class="fa-regular fa-id-card"></i> <span>Hồ sơ</span></a>
+        <a href="#tab=courses"  class="nav-item" data-tab="courses"><i class="fa-solid fa-book"></i> <span>Khoá học</span></a>
+        <a href="#tab=progress" class="nav-item" data-tab="progress"><i class="fa-solid fa-chart-line"></i> <span>Tiến độ</span></a>
+        <a href="#tab=wallet"   class="nav-item" data-tab="wallet"><i class="fa-solid fa-wallet"></i> <span>Ví</span></a>
+        <a href="#tab=settings" class="nav-item" data-tab="settings"><i class="fa-solid fa-gear"></i> <span>Cài đặt</span></a>
+      </nav>
+
+      <button id="dashLogout" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</button>
+    </aside>
+
+    <!-- Content -->
+    <section class="dash__content" id="dashContent">
+      <!-- PROFILE -->
+      <article id="tab-profile" class="panel is-active" role="tabpanel" aria-labelledby="tab-profile" tabindex="0">
+        <header class="panel__head">
+          <h2>Hồ sơ</h2>
+          <!-- KYC/Role status banner -->
+          <div id="verifyBanner" class="notice" role="status" aria-live="polite" hidden>
+            <div class="notice__icon">🛡️</div>
+            <div class="notice__body">
+              <h3 class="notice__title">Trạng thái tài khoản</h3>
+              <p class="notice__text" id="verifyText">Đang tải…</p>
+              <div class="notice__actions">
+                <a id="verifyPrimary" class="btn btn--primary" href="#" hidden>Bắt đầu</a>
+                <button id="verifyDismiss" class="btn btn--ghost" type="button" hidden>Ẩn</button>
+              </div>
+            </div>
+          </div>
+
+        </header>
+        <div class="profile__wrap">
+          <img id="profileAvatar" class="profile__avatar" src="assets/default_avatar.svg" alt="Avatar">
+          <div class="profile__info">
+            <p><strong>Tên: </strong><span id="profileName">Người dùng</span></p>
+            <p><strong>Email: </strong><span id="profileEmail">email@example.com</span></p>
+            <p><strong>Vai trò: </strong><span id="profileRole">Học sinh</span></p>
+          </div>
+        </div>
+      </article>
+
+      <!-- COURSES -->
+      <article id="tab-courses" class="panel" role="tabpanel" aria-labelledby="tab-courses" tabindex="0">
+        <header class="panel__head">
+          <h2>Khoá học</h2>
+        </header>
+        <p>Danh sách khoá học của bạn sẽ hiển thị tại đây.</p>
+        <div class="empty">
+          <i class="fa-solid fa-book-open"></i>
+          <p>Chưa có khoá học nào. <a href="mon/lythuyet.html">Bắt đầu học lý thuyết</a></p>
+        </div>
+      </article>
+
+      <!-- PROGRESS -->
+      <article id="tab-progress" class="panel" role="tabpanel" aria-labelledby="tab-progress" tabindex="0">
+        <header class="panel__head">
+          <h2>Tiến độ</h2>
+        </header>
+        <div class="progress__card">
+          <div class="progress__row">
+            <span>Vật lý</span>
+            <div class="bar"><div id="barPhysics" class="bar__fill" style="width:40%"></div></div>
+            <span id="pctPhysics" class="pct">40%</span>
+          </div>
+          <div class="progress__row">
+            <span>Hoá học</span>
+            <div class="bar"><div id="barChem" class="bar__fill" style="width:20%"></div></div>
+            <span id="pctChem" class="pct">20%</span>
+          </div>
+          <div class="progress__row">
+            <span>Toán</span>
+            <div class="bar"><div id="barMath" class="bar__fill" style="width:65%"></div></div>
+            <span id="pctMath" class="pct">65%</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- WALLET -->
+      <article id="tab-wallet" class="panel" role="tabpanel" aria-labelledby="tab-wallet" tabindex="0">
+        <header class="panel__head">
+          <h2>Ví của tôi</h2>
+        </header>
+
+        <div class="panel__body wallet">
+          <!-- Tổng quan số dư -->
+          <section class="wallet__summary card">
+            <div class="wallet__summary-row">
+              <div>
+                <div class="wallet__summary-label">Số dư hiện tại</div>
+                <div class="wallet__summary-amount" id="walletAmount">0₫</div>
+              </div>
+              <div class="wallet__summary-actions">
+                <a class="btn btn--primary" href="#tab=wallet" data-wallet-jump="#walletDeposit">Nạp tiền</a>
+                <a class="btn btn--ghost" href="#tab=wallet" data-wallet-jump="#walletWithdraw">Rút tiền</a>
+              </div>
+            </div>
+          </section>
+
+          <!-- Lưới 2 cột: Nạp / Rút -->
+          <section class="wallet__grid">
+
+            <!-- NẠP TIỀN -->
+            <div class="wallet__card card is-hidden" id="walletDeposit">
+              <h3 class="wallet__title"><i class="fa-solid fa-circle-plus"></i> Nạp tiền</h3>
+
+              <form id="formDeposit" class="wallet__form" autocomplete="off">
+                <label class="form__label" for="depAmount">Số tiền</label>
+                <div class="form__row">
+                  <input type="number" id="depAmount" class="input" min="10000" step="1000" placeholder="nhập ≥ 10.000" required />
+                  <span class="input__suffix">₫</span>
+                </div>
+
+                <div class="quick-amounts">
+                  <button type="button" class="chip" data-amount="50000">+50K</button>
+                  <button type="button" class="chip" data-amount="100000">+100K</button>
+                  <button type="button" class="chip" data-amount="200000">+200K</button>
+                </div>
+
+                <label class="form__label" for="depNote">Ghi chú (tuỳ chọn)</label>
+                <input type="text" id="depNote" class="input" placeholder="Ví dụ: nạp khoá Lý 10" />
+
+                <div class="form__actions">
+                  <button type="submit" class="btn btn--primary">
+                    <i class="fa-solid fa-paper-plane"></i> Xác nhận nạp
+                  </button>
+                </div>
+                <p class="form__hint">* Mô phỏng offline. Kết nối cổng thanh toán/Firestore sẽ bổ sung sau.</p>
+              </form>
+            </div>
+
+            <!-- RÚT TIỀN -->
+            <div class="wallet__card card is-hidden" id="walletWithdraw">
+              <h3 class="wallet__title"><i class="fa-solid fa-circle-minus"></i> Rút tiền</h3>
+
+              <form id="formWithdraw" class="wallet__form" autocomplete="off">
+                <label class="form__label" for="wdAmount">Số tiền</label>
+                <div class="form__row">
+                  <input type="number" id="wdAmount" class="input" min="20000" step="1000" placeholder="nhập ≥ 20.000" required />
+                  <span class="input__suffix">₫</span>
+                </div>
+
+                <label class="form__label" for="wdMethod">Phương thức</label>
+                <select id="wdMethod" class="input">
+                  <option value="bank">Chuyển khoản ngân hàng</option>
+                  <option value="momo">Momo</option>
+                  <option value="zalopay">ZaloPay</option>
+                </select>
+
+                <div class="form__row">
+                  <input type="text" id="wdTarget" class="input" placeholder="Số tài khoản / SĐT ví" required />
+                </div>
+
+                <div class="form__actions">
+                  <button type="submit" class="btn btn--danger">
+                    <i class="fa-solid fa-money-bill-transfer"></i> Xác nhận rút
+                  </button>
+                </div>
+                <p class="form__hint">* Mô phỏng offline. Khi nối Firestore: sẽ tạo yêu cầu rút & duyệt.</p>
+              </form>
+            </div>
+
+          </section>
+
+          <!-- Lịch sử giao dịch -->
+          <section class="wallet__history card">
+            <div class="wallet__history-head">
+              <h3 class="wallet__title"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử giao dịch</h3>
+              <button class="btn btn--ghost" id="walletClearHistory"><i class="fa-regular fa-trash-can"></i> Xoá lịch sử cục bộ</button>
+            </div>
+            <div id="walletHistory" class="wallet__history-list" aria-live="polite">
+              <!-- sẽ render bằng JS -->
+            </div>
+          </section>
+        </div>
+      </article>
+
+      <!-- SETTINGS -->
+      <article id="tab-settings" class="panel" role="tabpanel" aria-labelledby="tab-settings" tabindex="0">
+        <header class="panel__head">
+          <h2>Cài đặt</h2>
+        </header>
+        <div class="settings__grid">
+          <label class="switch">
+            <input id="toggleDark" type="checkbox">
+            <span class="slider"></span>
+            <span>Chế độ tối</span>
+          </label>
+          <label class="switch">
+            <input id="toggleTutor" type="checkbox" checked>
+            <span class="slider"></span>
+            <span>Bật SmartTutor nổi</span>
+          </label>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <!-- SmartTutor FAB -->
+  <a href="smarttutor.html" class="fab" id="fabTutor" aria-label="Mở SmartTutor">
+    <i class="fa-solid fa-robot"></i>
+  </a>
+
+  <!-- Scripts -->
+  <script type="module" src="js/core/firebase.js"></script>
+  <script type="module" src="js/core/boot_header.js"></script>
+  <script type="module" src="js/core/menu_toggle.js"></script>
+  <script type="module" src="js/modules/dashboard.js"></script>
+  <script type="module" src="js/modules/wallet.js"></script>
+  <script defer type="module" src="js/modules/user_status.js"></script>
+
+</body>
+</html>

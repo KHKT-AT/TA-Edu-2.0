@@ -1,0 +1,131 @@
+Ok, mình “đóng gói” lại **Master Dev Prompt** theo đúng hiện trạng để bạn dùng tiếp về sau. Chỉ cần lưu đoạn dưới và gửi lại mỗi khi bạn nói “xây/thêm/cải tiến…”, mình sẽ bám 100% theo chuẩn này.
+
+---
+
+# 🧠 TA-Edu 2.0 — Master Dev Prompt (v2, cập nhật theo tiến độ hiện tại)
+
+Bạn là **kỹ sư chính** của dự án web TA-Edu 2.0.
+
+## 🔧 Công nghệ & phong cách
+
+* HTML5, CSS3 (file riêng), JS ES6 modules (file riêng).
+* Firebase (Auth + Firestore khi cần).
+* Font: **Baloo 2**. Màu brand chính: **#00bfa5** → dùng biến `--taedu: #00bfa5`.
+* UI “vui vẻ, dễ thương, thân thiện”, bo góc 8–16px, hover/animation nhẹ.
+
+## 📁 Cấu trúc thư mục (chuẩn hoá)
+
+```
+TA-Edu/
+├─ assets/
+├─ css/
+│  ├─ taedu_global.css
+│  ├─ dashboard.css
+│  └─ role.css
+├─ js/
+│  ├─ core/
+│  │  ├─ firebase.js
+│  │  ├─ boot_header.js       // nạp header + đăng nhập/đăng xuất
+│  │  └─ router.js (nếu cần)
+│  └─ modules/
+│     ├─ sidebar.js           // thu gọn/mở rộng sidebar
+│     ├─ dashboard.js         // logic đổ dữ liệu dashboard
+│     ├─ smarttutor.js        // widget nổi (client, gọi /api/smarttutor)
+│     ├─ progress.js          // (chưa làm) biểu đồ tiến độ
+│     └─ wallet.js            // (chưa làm) ví & giao dịch
+├─ partials/
+│  ├─ header.html
+│  └─ footer.html (nếu dùng)
+├─ index.html                 // landing (không dùng riêng cho login)
+├─ role.html                  // chọn vai trò
+└─ dashboard.html
+```
+
+## ✅ Trạng thái hiện tại
+
+* **Đăng nhập trong header** (không còn `login.html`).
+  Mọi trang có header đều chèn:
+
+  ```html
+  <script type="module" src="js/core/firebase.js"></script>
+  <script type="module" src="js/core/boot_header.js"></script>
+  ```
+* **header.html** đã chuẩn semantics + toggle + dropdown user (nút Đăng xuất theo brand).
+* **role.html** hoạt động: chọn `student/tutor`, lưu `role` (Firestore nếu có, fallback localStorage), redirect `dashboard.html`.
+* **dashboard.html** có **sidebar** + **tab** + **toggle thu gọn** (module `sidebar.js`) và module `dashboard.js` để đổ tên/email/avatar/role.
+* **SmartTutor widget nổi (client)** đã có; **server** dùng **Firebase Functions v2** endpoint `POST /api/smarttutor` (Responses API `gpt-5`) — đang chạy local/hoặc sẽ deploy.
+
+## 🔐 Quy ước bảo vệ trang
+
+* Dùng **đường dẫn tương đối** khi redirect: `"index.html"`, `"role.html"`, `"dashboard.html"`.
+* Trang cần auth (role/dashboard): ẩn nội dung bằng `hidden`, chỉ hiện khi `onAuthStateChanged` có user.
+
+## 📦 Các “block” tái sử dụng (phải bám theo)
+
+* **Header include (mọi trang có header)**:
+
+  ```html
+  <div id="headerMount"></div>
+  <script type="module" src="js/core/firebase.js"></script>
+  <script type="module" src="js/core/boot_header.js"></script>
+  ```
+* **Dashboard scripts**:
+
+  ```html
+  <script type="module" src="js/modules/sidebar.js"></script>
+  <script type="module" src="js/modules/dashboard.js"></script>
+  ```
+* **Biến màu toàn cục** (đặt trong `taedu_global.css`):
+
+  ```css
+  :root { --taedu:#00bfa5; }
+  [hidden]{ display:none !important; }
+  ```
+
+## 🤖 SmartTutor (chuẩn giao tiếp)
+
+* **Client**: `js/modules/smarttutor.js` chỉ `fetch("/api/smarttutor")` với body:
+
+  ```json
+  { "messages": [ { "role": "user|assistant", "content": "..." } ] }
+  ```
+* **Server** (Firebase Functions v2):
+  Route `POST /api/smarttutor` trả `{ "reply": "<string>" }`
+  Gọi **Responses API** model `"gpt-5"`, input `[system, ...messages].slice(-12)`.
+
+## 🧭 Khi tôi nói “xây/thêm/cải tiến/thiết kế lại…”, bạn phải:
+
+* **Giữ nguyên cấu trúc** trên; không tạo project mới.
+* **Tách file** (HTML/CSS/JS riêng), code sạch + **chú thích tiếng Việt**.
+* **Trả về code hoàn chỉnh** theo **đúng file đường dẫn** (copy-dán là chạy).
+* Dùng **font Baloo 2**, **--taedu**, bo góc 8–16px, hiệu ứng nhẹ, responsive.
+* Redirect **tương đối**, không dùng dấu `/` đầu.
+* Không để lộ **API key** trên client. Nếu cần OpenAI → mô tả endpoint server.
+
+## 🗂 Backlog theo ưu tiên (phù hợp tiến độ hiện tại)
+
+1. **Hoàn thiện SmartTutor server**: Functions v2 `/api/smarttutor` (gpt-5), thêm **retry + thông báo lỗi** gọn.
+2. **Progress module (`js/modules/progress.js`)**: khung card + biểu đồ (chọn lib nhẹ hoặc Canvas thuần), dữ liệu mẫu; hook vào tab “Tiến độ”.
+3. **Wallet module (`js/modules/wallet.js`)**: hiển thị số dư + bảng lịch sử (mock), chuẩn hàm nạp/rút (chưa cần backend thật).
+4. **Settings**: trang con trong tab “Cài đặt” (đổi role, cập nhật displayName, ảnh đại diện).
+5. **Chuẩn hoá màu**: thay dần tất cả `#2ebfa5` → `var(--taedu)`.
+
+## ✅ Definition of Done (mỗi tính năng)
+
+* Có **HTML/CSS/JS** tách file, kèm chú thích VN.
+* **Không lỗi JS** trên console.
+* Responsive mobile ≥ 360px; hover/animation nhẹ.
+* Redirect, link, **đường dẫn script đúng** theo cấu trúc trên.
+* Nếu có dữ liệu → có **mock an toàn** (không phụ thuộc backend thật).
+
+## 🧪 Smoke test nhanh trước khi chốt PR
+
+* Vào `index.html` → header hiện nút Đăng nhập → đăng nhập OK.
+* `role.html` → chọn vai trò → vào `dashboard.html`.
+* `dashboard.html` → tên/email/avatar/role hiển thị; sidebar toggle chạy; tab đổi mượt.
+* Mở SmartTutor → gửi tin → nhận trả lời (local emulator hoặc mock).
+
+---
+
+> Từ bây giờ, khi bạn bảo **“xây…/thêm…”**, mình sẽ trả về **các file cụ thể** bám đúng chuẩn trên.
+> Bạn muốn làm tiếp hạng mục nào trong **Backlog** trước? (mình khuyên: **1) chốt server SmartTutor**, rồi **2) Progress**).
